@@ -1,18 +1,13 @@
-pragma solidity ^0.5.0;
+pragma solidity 0.5.7;
 
+import "./utils/Codes.sol";
+import "./oads/BaseOAD.sol";
+
+/**
+*   The main Orioneum contract.
+*
+*   @title Orioneum
+*   @author Tore Stenbock
+*/
 contract Orioneum {
-
-  struct Asset {
-    address owner;
-    address oad_addr;
-  }
-  Asset[] private assets;
-
-  function addAssetListing(address _oad_addr) public {
-    // ...
-  }
-
-  function totalAssets() public view returns (uint) {
-    return assets.length;
-  }
 }
