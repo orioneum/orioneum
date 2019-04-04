@@ -1,13 +1,32 @@
 pragma solidity 0.5.7;
 
-import "./utils/Codes.sol";
-import "./oads/BaseOAD.sol";
+import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /**
-*   The base storage for the Orioneum Asset Registry.
-*   The registry will reference to this storage to determine if an asset has been
-*   previously been deployed.
-*   This class is useful as it is OAD agnostic as long as the asset to be stored is
+*   Base cotnract representing all root components of all OADs.
+*   Some functions are abstract and therefore requires the OAD class to implement
+*   that functionality.
+*   @title Orioneum Base Asset Contract
+*   @author Tore Stenbock
+*/
+contract BaseOAD is Ownable {
+
+  // In addition to functions and modifiers from Ownable.sol, this is the
+  // base information required for all OAD assets
+  uint public creation_time = now;
+  uint public oad_type = 0; // Zero value means not initialized
+
+  // Abstract function all parents must implement
+  function setOADType(uint _oad_type) external;
+}
+
+
+
+/**
+*   The base storage for the Orioneum Marketplace.
+*   The Orioneum Registry and Factory will reference to this storage when
+*   an asset is to be deployed and accessed.
+*   This class is useful as it is OAD agnostic as long as the asset is
 *   of BaseOAD type.
 *
 *   @title Orioneum Asset Warehouse
@@ -15,49 +34,44 @@ import "./oads/BaseOAD.sol";
 */
 contract Warehouse {
 
-  // All Orioneum Warehouse events declarations
-  event AddedAssetEvent(address indexed oad);
-
-  // Create references to Codes
-  ReturnCodes private Codes;
-  OADTypes private oadTypes;
-
-  // Storage struct and array
+  // Storage struct and address mapping
   struct AssetStorage {
     address oad_addr;
+    address oad_owner;
     uint oad_type;
     BaseOAD base_oad;
   }
-  AssetStorage[] private records;
+  mapping(address => AssetStorage) private oads;  // (OAD Address => AssetStorage struct)
 
   /**
-  *   Add OADs and record BaseOAD info into the storage
+  *   Add OADs and record BaseOAD info and owner info into the storage
   */
-  function addAsset(address _oad_addr) public returns(uint) {
+  function addAsset(address _oad_addr) external {
 
-    // Convert to BaseOAD contract
-    // TODO: What if it is not a OAD type?
+    // Check if OAD already is registered
+    require(oads[_oad_addr].oad_owner != address(0x0)); // Non-existing entries default to zero
+
+    // Convert to BaseOAD contract and enforce requirements
     BaseOAD _base_oad = BaseOAD(_oad_addr);
+    require(_base_oad.oad_type() > 0);
 
-    // Require the OAD Type to be other than Unknown
-    require(_base_oad.oadType() != oadTypes.Unknown());
+    // Package the asset before storing
+    AssetStorage memory _asset = AssetStorage(
+      _oad_addr,
+      _base_oad.owner(),
+      _base_oad.oad_type(),
+      _base_oad
+    );
 
-    // Push to the warehouse storage
-    records.push(AssetStorage({
-      oad_addr: _oad_addr,
-      oad_type: _base_oad.oadType(),
-      base_oad: _base_oad
-    }));
-
-    // Emit event and return SUCCESS
-    emit AddedAssetEvent(_oad_addr);
-    return Codes.SUCCESS();
+    // Store the asset
+    oads[_oad_addr] = _asset;
   }
 
   /**
-  *   Get the total number of assets in storage
+  *   Get an OAD stored based on priviledges of the sender
   */
-  function totalAssets() public view returns(uint) {
-    return records.length;
+  function getAssets() external view returns(address[] memory) {
+    address[] memory _oads;
+    return _oads;
   }
 }
