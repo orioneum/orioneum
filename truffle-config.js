@@ -10,8 +10,8 @@ module.exports = {
     // },
 
     ropsten: {
-      host: "192.168.0.20", // Location of Ropsten geth instance (LAN node)
-      port: 8546,           // Port of Ropsten geth instance (LAN node)
+      host: "192.168.0.51", // Location of Ropsten geth instance (LAN node)
+      port: 8545,           // Port of Ropsten geth instance (LAN node)
       network_id: 3,        // Ropsten's id
       gas: 5500000,         // Ropsten has a lower block limit than mainnet
       // confirmations: 2,     // # of confs to wait between deployments. (default: 0)

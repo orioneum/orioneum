@@ -1,24 +1,31 @@
 pragma solidity 0.5.7;
 
-import "../Warehouse.sol";
+import "../OrioneumWarehouse.sol";
+
+
 
 /**
-*   OAD1: Final tradeable and unique assets
-*   BaseOAD style imported from the Warehouse contract
+*   BaseOAD style imported from the Factory contract
 *
 *   @title Orioneum Asset Definition One
 *   @author Tore Stenbock
 */
 contract OAD1 is BaseOAD {
 
-  /**
-  *   Abstract function from BaseOAD
-  */
-  function setOADType(uint _oad_type) external {
-    oad_type = _oad_type;
+  // OAD1 digital twin information
+  string public title = "";
+  string public description = "";
+
+  // Create the digital twin of OAD1 type with all required information
+  constructor(string memory _title, string memory _description) public {
+
+    // Initialize digital twin specific values
+    title = _title;
+    description = _description;
   }
 
-  /**
-  *   OAD oracle declarations
-  */
+  // Return all related fixed information about this type of asset including human-readable titles, and so on.
+  function getAssetDescription() view public returns(uint, string memory, string memory) {
+    return(oad_type, title, description);
+  }
 }

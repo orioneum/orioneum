@@ -1,7 +1,9 @@
-const Warehouse = artifacts.require("./Warehouse.sol")
-const Registry = artifacts.require("./Registry.sol")
+const OrioneumWarehouse = artifacts.require("./OrioneumWarehouse.sol")
+const OrioneumFactory = artifacts.require("./OrioneumFactory.sol")
+const OrioneumRegistry = artifacts.require("./OrioneumRegistry.sol")
 
 module.exports = function(deployer) {
-    deployer.deploy(Warehouse)
-    deployer.deploy(Registry)
+
+  deployer.deploy(OrioneumWarehouse)
+  deployer.deploy(OrioneumFactory)
 }
