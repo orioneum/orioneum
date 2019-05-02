@@ -15,17 +15,16 @@ import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract OrioneumRegistry is Ownable {
 
   // Orioneum Contracts (zero initializied)
-  OrioneumFactory private factory = OrioneumFactory(0);
   OrioneumWarehouse private warehouse = OrioneumWarehouse(0);
 
-  // Require the Factory and Warehouse addresses on contract creation
-  constructor(address _factoryAddr, address _warehouseAddr) public {
 
-    // Get a handle on the Factory and Warehouse contracts
-    factory = OrioneumFactory(_factoryAddr);
+
+  constructor(address _warehouseAddr) public {
     warehouse = OrioneumWarehouse(_warehouseAddr);
-
-    // Strict requirement that owner of all Orioneum contracts are the same
-    require(owner() == factory.owner() && owner() == warehouse.owner());
+    require(owner() == warehouse.owner());
   }
+
+
+
+  
 }
