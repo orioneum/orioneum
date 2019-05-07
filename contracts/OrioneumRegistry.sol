@@ -15,7 +15,6 @@ import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract OrioneumRegistry is Ownable {
 
   // Orioneum Contracts (zero initializied)
-  OrioneumFactory private factory = OrioneumFactory(0);
   OrioneumWarehouse private warehouse = OrioneumWarehouse(0);
 
   // Require the Factory and Warehouse addresses on contract creation
@@ -39,4 +38,8 @@ contract OrioneumRegistry is Ownable {
   function registerAsset(uint _oad_type) pure external returns(string memory) {
     return("Hello world");
   }
+
+
+
+
 }
