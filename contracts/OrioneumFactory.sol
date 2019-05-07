@@ -15,5 +15,8 @@ import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 *   @author Tore Stenbock
 */
 contract OrioneumFactory is Ownable {
-  
+
+  function createAsset() pure external returns(uint) {
+    return 1337;
+  }
 }
