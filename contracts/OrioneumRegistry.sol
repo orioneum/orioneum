@@ -16,6 +16,7 @@ contract OrioneumRegistry is Ownable {
 
   // Orioneum Contracts (zero initializied)
   OrioneumWarehouse private warehouse = OrioneumWarehouse(0);
+  OrioneumFactory private factory = OrioneumFactory(0);
 
   // Require the Factory and Warehouse addresses on contract creation
   constructor(address _warehouseAddr, address _factoryAddr) public {
@@ -30,16 +31,23 @@ contract OrioneumRegistry is Ownable {
 
 
   /**
-  *   Register an asset with Orioneum. This will call appropriate factory function,
-  *   followed with storing the contract in the Warehouse
+  *   Register an asset with Orioneum that has already been created.
+  *   Forward the address to the Warehouse for checks and storage.
   *
   *   @author Tore Stenbock
   */
-  function registerAsset(uint _oad_type) pure external returns(string memory) {
-    return("Hello world");
+  function registerAsset(address _oad_addr) public returns(bool) {
+    warehouse.addAsset(_oad_addr);
+
+    return true;
   }
 
+  function registerAsset(uint _oad_type, string memory _title, string memory _description) public returns(address) {
+    address _oad_addr = factory.createAsset(_oad_type, _title, _description);
+    registerAsset(_oad_addr);
 
+    return _oad_addr;
+  }
 
 
 }

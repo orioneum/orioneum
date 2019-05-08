@@ -17,7 +17,9 @@ import "../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 */
 contract OrioneumFactory is Ownable {
 
-  function createAsset() pure external returns(uint) {
-    return 1337;
+  function createAsset(uint _oad_type, string memory _title, string memory _description) public returns(address) {
+    OAD1 _oad1 = new OAD1(_title, _description);
+
+    return address(_oad1);
   }
 }
