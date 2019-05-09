@@ -23,26 +23,28 @@ contract OrioneumFactory is Ownable {
   *   Holder of all available OAD Types. Useful for getting base information of each OAD Type.
   */
   mapping(uint => bool) availableOADTypeCodes;
+  OAD1 oad1;
   uint private OAD1Type = 1;
-  uint private OAD2Type = 2;
+//  OAD2 oad2;
+//  uint private OAD2Type = 2;
 
 
 
   constructor() public {
       // Populate the availableOADTypeCodes mapping
       availableOADTypeCodes[OAD1Type] = true;
-      availableOADTypeCodes[OAD2Type] = false;
+//      availableOADTypeCodes[OAD2Type] = false;
   }
 
 
 
   // BaseOAD information getter
-  function getBaseOADInfo(uint _oad_type) public pure returns(string memory, string memory) {
+  function getBaseOADInfo(uint _oad_type) public view returns(string memory, string memory) {
     require(availableOADTypeCodes[_oad_type]);
 
     // Return the correct values
     if (_oad_type == OAD1Type) {
-      return(OAD1.base_title, OAD1.base_description);
+      return(oad1.base_title(), oad1.base_description());
     }
     /* if (_oad_type == OAD2Type) {
       return(OAD2.base_title, OAD2.base_description);
@@ -54,9 +56,10 @@ contract OrioneumFactory is Ownable {
 
 
 
-  function createAsset(uint _oad_type, string memory _title, string memory _description) public returns(address) {
+  function createAsset(string memory _title, string memory _description) public returns(address) {
     OAD1 _oad1 = new OAD1(_title, _description);
 
+    // Emit event and return the address
     return address(_oad1);
   }
 }
