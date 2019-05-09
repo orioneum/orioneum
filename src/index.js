@@ -1,16 +1,17 @@
-var package = require("./package.json")
+var package = require("../package.json")
 
 // Import the necessary json files from Truffle build
-var OrionemFactory = require("./build/contracts/OrioneumFactory")
-var OrionemRegistry = require("./build/contracts/OrioneumRegistry")
+var orionemFactory = require("../build/contracts/OrioneumFactory")
+var orionemRegistry = require("../build/contracts/OrioneumRegistry")
 
 
 
 // Export basic information
+// TODO: Better way than this
 exports.Orioneum = {
-  "version:" package.version
+  "version": package.version
 }
 
 // Export the structures to npm package
-exports.OrioneumFactory = OrionemFactory
-exports.OrioneumRegistry = OrionemRegistry
+exports.OrioneumFactory = orionemFactory
+exports.OrioneumRegistry = orionemRegistry
