@@ -1,6 +1,15 @@
 {
-  "private": true,
-  "dependencies": {
-    "openzeppelin-solidity": "2.2.0"
-  }
+  "name": "@orioneum/protocol",
+  "version": "0.0.1",
+  "description": "Enabling a hyperconnected and value-driven world",
+
+  "main": "src/index.js",
+  "license": "LGPLv3",
+  "repository": "orioneum/orioneum",
+
+  "keywords": [
+    "ethereum",
+    "orioneum",
+    "web3"
+  ]
 }

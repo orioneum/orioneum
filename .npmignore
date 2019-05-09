@@ -1,0 +1,13 @@
+# Basic ignores
+./git/
+.gitignore
+
+# Smart contracts and Truffle folders
+build/contracts/*
+!build/contracts/OrioneumFactory.json
+!build/contracts/OrioneumRegistry.json
+contracts/
+migrations/
+truffle-config.js
+
+# Misc
