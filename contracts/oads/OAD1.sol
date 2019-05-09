@@ -12,6 +12,9 @@ import "../OrioneumWarehouse.sol";
 */
 contract OAD1 is BaseOAD {
 
+  string public base_title = "Item for sale";
+  string public base_description = "Listing of a non-specialized item with a non-zero value and with basic owner information";
+
   string public title = "";
   string public description = "";
 
