@@ -20,12 +20,14 @@ contract OrioneumFactory is Ownable {
 
   // Get access to all public values from available OADs
   OAD1 oad1;
-  uint[] availableOADTypeCodes = [oad1.assetType()];
 
 
 
-  function getAvailableOADTypeCodes() public view returns(uint[] memory) {
-    // Simply return the list of available type codes
+  function getAvailableOADTypeCodes() public view returns(uint[1] memory) {
+    // Simply create and return a list of available type codes
+    uint[1] memory availableOADTypeCodes = [
+      oad1.assetType()
+    ];
     return(availableOADTypeCodes);
   }
 
