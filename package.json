@@ -1,6 +1,6 @@
 {
   "name": "@orioneum/protocol",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Enabling a hyperconnected and value-driven world",
   "main": "src/index.js",
   "license": "LGPL-3.0",
