@@ -1,2 +1,7 @@
+
+# Basic ignores
 build/
 node_modules/
+
+# Misc
+npm-debug.log
