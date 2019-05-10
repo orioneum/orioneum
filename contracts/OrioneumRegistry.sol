@@ -43,12 +43,12 @@ contract OrioneumRegistry is Ownable {
     return true;
   }
 
-  function registerAsset(uint _oad_type, string memory _title, string memory _description) public returns(address) {
+  /* function registerAsset(uint _oad_type, string memory _title, string memory _description) public returns(address) {
     address _oad_addr = factory.createAsset(_title, _description);
     registerAsset(_oad_addr);
 
     return _oad_addr;
-  }
+  } */
 
 
 }

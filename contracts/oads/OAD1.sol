@@ -12,22 +12,19 @@ import "../OrioneumWarehouse.sol";
 */
 contract OAD1 is BaseOAD {
 
-  string public base_title = "Item for sale";
-  string public base_description = "Listing of a non-specialized item with a non-zero value and with basic owner information";
+  uint public assetType = 1;
 
-  string public title = "";
-  string public description = "";
+  bytes public base_title = "Item for sale";
+  bytes public base_description = "Listing of a non-specialized item with a non-zero value and with basic owner information";
+
+  bytes public title = "";
+  bytes public description = "";
 
 
 
-  constructor(string memory _title, string memory _description) public {
+  constructor(bytes memory _title, bytes memory _description) public {
     title = _title;
     description = _description;
   }
 
-
-
-  function getAssetDescription() view public returns(uint, string memory, string memory) {
-    return(oad_type, title, description);
-  }
 }
