@@ -1,6 +1,7 @@
 # Basic ignores
 ./git/
 .gitignore
+node_modules/
 
 # Smart contracts and Truffle folders
 build/contracts/*
