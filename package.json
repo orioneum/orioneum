@@ -10,7 +10,7 @@
     "orioneum",
     "web3"
   ],
-  "dependencies": {
+  "devDependencies": {
     "openzeppelin-solidity": "2.2.0",
     "truffle-hdwallet-provider": "^1.0.9"
   }
