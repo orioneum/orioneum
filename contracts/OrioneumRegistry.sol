@@ -1,4 +1,4 @@
-pragma solidity 0.5.7;
+pragma solidity ^0.5.7;
 
 import "./OrioneumWarehouse.sol";
 import "./OrioneumFactory.sol";
@@ -20,7 +20,7 @@ contract OrioneumRegistry is Ownable {
   OrioneumFactory private factory = OrioneumFactory(0);
 
   // Require the Factory and Warehouse addresses on contract creation
-  constructor(address _warehouseAddr, address _factoryAddr) public {
+  constructor(address _warehouseAddr, address _factoryAddr) Ownable() public {
 
     // Get a handle on the Factory and Warehouse contracts
     warehouse = OrioneumWarehouse(_warehouseAddr);

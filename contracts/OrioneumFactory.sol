@@ -1,4 +1,4 @@
-pragma solidity 0.5.7;
+pragma solidity ^0.5.7;
 
 import "./oads/OAD1.sol";
 import "./OrioneumWarehouse.sol";
@@ -22,14 +22,15 @@ contract OrioneumFactory is Ownable {
   OrioneumWarehouse private warehouse = OrioneumWarehouse(0);
 
   // Holder for all availableOADTypeCodes for this deployed Factory
-  mapping(uint => bool) availableOADTypeCodes;
+  mapping(uint8 => bool) availableOADTypeCodes;
 
 
 
-  constructor(address _warehouseAddr) public {
+  constructor(address _warehouseAddr) Ownable() public {
     warehouse = OrioneumWarehouse(_warehouseAddr);
     require(owner() == warehouse.owner());
 
+    // Populate the mapping with available OADs from relevant OPDs
     availableOADTypeCodes[1] = true; // OAD1
   }
 
@@ -38,9 +39,17 @@ contract OrioneumFactory is Ownable {
   /**
   *   Get BaseOAD information according to OPDs
   */
-  function getBaseOADInfo(uint _oad_type) public view returns(string memory, string memory) {
+  function getBaseOADInfo(uint8 _oad_type) public view returns(string memory, string memory) {
     require(availableOADTypeCodes[_oad_type]);
 
-    return("Item for sale1", "Item for sale2");
+    if (_oad_type == 1) { // OAD1
+      return(
+        "Item for sale",
+        "Listing of a non-specialized item with a non-zero value and with basic owner information"
+      );
+    }
+
+    // This should never happen
+    return("", "");
   }
 }
