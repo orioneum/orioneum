@@ -18,21 +18,29 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 */
 contract OrioneumFactory is Ownable {
 
-  // Get access to all public values from available OADs
-  OAD1 oad1;
+  // Orioneum Contracts (zero initializied)
+  OrioneumWarehouse private warehouse = OrioneumWarehouse(0);
+
+  // Holder for all availableOADTypeCodes for this deployed Factory
+  mapping(uint => bool) availableOADTypeCodes;
 
 
 
-  function getAvailableOADTypeCodes() public view returns(uint[] memory) {
-    // Simply create and return a list of available type codes
-    uint totalAvailableOADTypeCodes = 1;
-    uint[] memory availableOADTypeCodes = new uint[](totalAvailableOADTypeCodes); 
-    availableOADTypeCodes[0] = oad1.assetType();
+  constructor(address _warehouseAddr) public {
+    warehouse = OrioneumWarehouse(_warehouseAddr);
+    require(owner() == warehouse.owner());
 
-    return(availableOADTypeCodes);
+    availableOADTypeCodes[1] = true; // OAD1
   }
 
-  function getBaseOADInfo() public view returns(bytes memory, bytes memory) {
-    return(oad1.base_title(), oad1.base_description());
+
+
+  /**
+  *   Get BaseOAD information according to OPDs
+  */
+  function getBaseOADInfo(uint _oad_type) public view returns(string memory, string memory) {
+    require(availableOADTypeCodes[_oad_type]);
+
+    return("Item for sale1", "Item for sale2");
   }
 }

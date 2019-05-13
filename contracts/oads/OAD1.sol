@@ -12,17 +12,13 @@ import "../OrioneumWarehouse.sol";
 */
 contract OAD1 is BaseOAD {
 
-  uint public assetType = 1;
-
-  bytes public base_title = "Item for sale";
-  bytes public base_description = "Listing of a non-specialized item with a non-zero value and with basic owner information";
-
-  bytes public title = "";
-  bytes public description = "";
+  // All OAD1 on-chain information
+  string public title = "";
+  string public description = "";
 
 
 
-  constructor(bytes memory _title, bytes memory _description) public {
+  constructor(string memory _title, string memory _description) public {
     title = _title;
     description = _description;
   }
