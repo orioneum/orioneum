@@ -7,10 +7,10 @@ import "../OrioneumWarehouse.sol";
 /**
 *   BaseOAD style imported from the Warehouse contract
 *
-*   @title Orioneum Asset Definition One
+*   @title Orioneum Asset Definition Two
 *   @author Tore Stenbock
 */
-contract OAD1 is BaseOAD {
+contract OAD2 is BaseOAD {
 
   // All OAD1 on-chain information
   string public title = "";
@@ -22,4 +22,5 @@ contract OAD1 is BaseOAD {
     title = _title;
     description = _description;
   }
+
 }
