@@ -22,8 +22,9 @@ contract OrioneumFactory is Ownable {
 
   // Maintain mapping of available assets
   mapping(uint => bool) private availableOADTypes;
-  uint private oad1_type = 1;
-  uint private oad2_type = 2;
+  uint constant oad1Type = 1;
+  uint constant oad2Type = 2;
+  uint constant totalOADTypes = 2;
 
   // Orioneum Contracts (zero initializied)
   OrioneumWarehouse private warehouse = OrioneumWarehouse(0);
@@ -36,23 +37,32 @@ contract OrioneumFactory is Ownable {
     require(owner() == warehouse.owner());
 
     // Initialize the availableOADTypes mapping
-    availableOADTypes[oad1_type] = true;
-    availableOADTypes[oad2_type] = true;
+    availableOADTypes[oad1Type] = true;
+    availableOADTypes[oad2Type] = true;
   }
 
 
+
+  // Get all the available OAD type codes
+  function getAvailableOADTypeCodes() public pure returns(uint[] memory) {
+    uint[] memory _availableOADTypeCodes = new uint[](totalOADTypes);
+    _availableOADTypeCodes[0] = oad1Type;
+    _availableOADTypeCodes[1] = oad2Type;
+
+    return(_availableOADTypeCodes);
+  }
 
   // Get the base title and description of the available assets
   function getOADTypeBaseInformation(uint _oad_type) public view returns(string memory, string memory) {
     require(availableOADTypes[_oad_type]);
 
-    if (_oad_type == oad1_type) {
+    if (_oad_type == oad1Type) {
       return(
         "Item for sale",
         "A generic item with a non-zero sell value and with basic owner information."
       );
     }
-    else if (_oad_type == oad2_type) {
+    else if (_oad_type == oad2Type) {
       return(
         "Discount code",
         "A discount code with a zero sell value and with basic owner information."
