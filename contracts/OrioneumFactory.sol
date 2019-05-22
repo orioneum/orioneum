@@ -1,4 +1,4 @@
-pragma solidity ^0.5.7;
+pragma solidity 0.5.8;
 
 import "./oads/OAD1.sol";
 import "./oads/OAD2.sol";
