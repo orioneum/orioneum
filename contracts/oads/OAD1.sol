@@ -12,13 +12,11 @@ import "../OrioneumWarehouse.sol";
 */
 contract OAD1 is BaseOAD {
 
-  // All OAD1 on-chain information
-  string public title = "";
-  string public description = "";
-
 
 
   constructor(string memory _title, string memory _description) public {
+
+    // Set the BaseOAD information
     title = _title;
     description = _description;
   }

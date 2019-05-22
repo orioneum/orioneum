@@ -1,4 +1,4 @@
-pragma solidity ^0.5.7;
+rtpragma solidity ^0.5.7;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
@@ -13,9 +13,13 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 *   @author Tore Stenbock
 */
 contract BaseOAD is Ownable {
-  uint8 public oad_type = 0; // Zero value means not initialized
-  uint256 public creation_time = now; // (uint): current block timestamp (alias for block.timestamp)
+  uint public oad_type = 0; // Zero value means not initialized
+  uint public creation_time = now; // (uint): current block timestamp (alias for block.timestamp)
+  bool public bundleable = false;
+  string public title = "";
+  string public description = "";
 }
+
 
 
 
