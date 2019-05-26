@@ -1,6 +1,7 @@
-const OrioneumWarehouse = artifacts.require("./OrioneumWarehouse.sol")
+const Warehouse = artifacts.require("./Warehouse.sol")
+
+
 
 module.exports = function(deployer) {
-
-  deployer.deploy(OrioneumWarehouse)
+  deployer.deploy(Warehouse)
 }

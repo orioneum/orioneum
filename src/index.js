@@ -1,8 +1,8 @@
 var pkg = require("../package.json")
 
 // Import the necessary json files from Truffle build
-var Factory = require("../build/contracts/OrioneumFactory")
-var Registry = require("../build/contracts/OrioneumRegistry")
+var Warehouse = require("../build/contracts/Warehouse")
+var Registry = require("../build/contracts/Registry")
 
 
 
@@ -11,7 +11,7 @@ var Registry = require("../build/contracts/OrioneumRegistry")
 exports.Orioneum = {
   "version": pkg.version,
   "contracts": {
-    Factory,
+    Warehouse,
     Registry
   },
 }

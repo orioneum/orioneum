@@ -1,6 +1,6 @@
 pragma solidity 0.5.8;
 
-import "../OrioneumWarehouse.sol";
+import "../Warehouse.sol";
 
 
 
@@ -17,6 +17,8 @@ contract OAD2 is BaseOAD {
   constructor(string memory _title, string memory _description) public {
 
     // Set the BaseOAD information
+    oad_type = 2;
+    bundleable = true;
     title = _title;
     description = _description;
   }
