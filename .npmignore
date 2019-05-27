@@ -5,8 +5,8 @@ node_modules/
 
 # Smart contracts and Truffle folders
 build/contracts/*
-!build/contracts/OrioneumFactory.json
-!build/contracts/OrioneumRegistry.json
+!build/contracts/Warehouse.json
+!build/contracts/Registry.json
 contracts/
 migrations/
 truffle-config.js
