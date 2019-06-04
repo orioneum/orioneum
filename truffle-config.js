@@ -1,3 +1,5 @@
+require('@babel/register')
+require("regenerator-runtime/runtime")
 
 // Get all keys and ids from environment variables
 const HDWalletProvider = require("truffle-hdwallet-provider")
@@ -13,7 +15,7 @@ module.exports = {
      host: "127.0.0.1",     // Localhost
      port: 8545,            // Standard Ethereum port
      network_id: "*",       // Any network (default: none)
-     gas: 5500000           // Default is 4712388
+     gas: 200000000         // Default is 4712388
     },
 
     // Beta network

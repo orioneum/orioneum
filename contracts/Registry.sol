@@ -1,9 +1,7 @@
 pragma solidity 0.5.8;
 
-import "./Utils.sol";
+import "./Factory.sol";
 import "./Warehouse.sol";
-import "./oads/OAD1.sol";
-import "./oads/OAD2.sol";
 
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -19,21 +17,12 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract Registry is Ownable {
 
   // All Registry events
-  event Orioneum_CREATE_OAD1      (address indexed oad_addr, address indexed owner_addr);
-  event Orioneum_CREATE_OAD2      (address indexed oad_addr, address indexed owner_addr);
-  event Orioneum_REGISTER_NEW     (address indexed oad_addr);
-
-
+  event Orioneum_REGISTER_NEW       (address indexed oad_addr);
+  event Orioneum_REGISTER_FAILED    (address indexed oad_addr);
 
   // Orioneum Contracts
-  Utils private utils;
+  Factory private factory;
   Warehouse private warehouse;
-
-  // Maintain mapping of available assets
-  mapping(uint => bool) private available_oad_types;
-  uint public constant oad1_type = 1;
-  uint public constant oad2_type = 2;
-  uint private constant total_oad_types = 2;
 
 
 
@@ -41,19 +30,15 @@ contract Registry is Ownable {
   *   Registry constructor
   *
   *   @author Tore Stenbock
-  *   @param _utils_addr The address of the Utils contract
+  *   @param _factory_addr The address of the Factory contract
   *   @param _warehouse_addr The address of the Warehouse contract
   */
-  constructor(address _utils_addr, address _warehouse_addr) Ownable() public {
-    // Get a handle on the deployed Utils and Warehouse contracts
-    utils = Utils(_utils_addr);
+  constructor(address _factory_addr, address _warehouse_addr) Ownable() public {
+    // Get a handle on the deployed Factory and Warehouse contracts
+    factory = Factory(_factory_addr);
     warehouse = Warehouse(_warehouse_addr);
-    require(owner() == utils.owner() && owner() == warehouse.owner(),
-      "Registry owner must be same as Utils and Warehouse owner.");
-
-    // Initialize the available_oad_types mapping
-    available_oad_types[oad1_type] = true;
-    available_oad_types[oad2_type] = true;
+    require(owner() == factory.owner() && owner() == warehouse.owner(),
+      "Registry owner must be same as Factory and Warehouse owner.");
   }
 
 
@@ -63,123 +48,94 @@ contract Registry is Ownable {
   /****************************************************************************/
 
   /**
-  *   Register a previously created OAD1
+  *   Register a previously created OAD
   *
   *   @author Tore Stenbock
   *   @param _oad_addr The address of the OAD
   */
-  function register(address _oad_addr) public {
-    if(warehouse.add(_oad_addr)) {
-      emit Orioneum_REGISTER_NEW(_oad_addr);
+  function register(address _oad_addr) public returns(bool) {
+    if(!warehouse.add(_oad_addr)) {
+      emit Orioneum_REGISTER_FAILED(_oad_addr);
+      return(false);
     }
+
+    emit Orioneum_REGISTER_NEW(_oad_addr);
+    return(true);
+  }
+
+  /**
+  *  Create and Register an OAD
+  *   Useful function to bundle all transactions into one
+  *
+  *   @author Tore Stenbock
+  *   @param _oad_type The OAD type
+  *   @param _bundleable Flag whether OAD is bundleable
+  *   @param _digest Bytes32 representation of IPFS hash
+  *   @param _hash_function Hash function for IPFS has
+  *   @param _size Size of the IPFS hash minus header
+  */
+  function createAndRegister(
+    uint _oad_type,
+    bool _bundleable,
+    // Following is IPFS Multihash values
+    bytes32 _digest,
+    uint8 _hash_function,
+    uint8 _size
+  )
+  public returns(bool)
+  {
+    address _oad_addr = factory.create(_oad_type, _bundleable, _digest, _hash_function, _size);
+    return(register(_oad_addr));
   }
 
 
 
   /****************************************************************************/
-  /****                       Warehouse interfacing                        ****/
-  /****************************************************************************/
-
-
-  /**
-  *   Gets all OADs in the Warehouse matching _owner_addr
-  *
-  *   @author Tore Stenbock
-  *   @param _owner_addr The address of the owner
-  */
-  function getByOwner(address _owner_addr) external view returns(address[] memory) {
-    return(warehouse.get(_owner_addr));
-  }
-
-  /**
-  *   Gets values from a given OAD1 address
-  *
-  *   @author Tore Stenbock
-  *   @param _oad_addr The address of the OAD1
-  */
-  function getOAD1Values(address _oad_addr) external view returns(string memory, string memory, bool) {
-    OAD1 _oad1 = OAD1(_oad_addr);
-    return(_oad1.title(), _oad1.description(), _oad1.bundleable());
-  }
-
-
-
-  /****************************************************************************/
-  /***             Creating and registering OAD smart contracts            ****/
+  /****                   Query Warehouse and Registry                     ****/
   /****************************************************************************/
 
   /**
-  *   Create and register an OAD1 in one Tx
+  *   Execute a query into the Registry and Warehouse to get all OADs
+  *   of certain type and owner. See OPD documentation for more details.
   *
   *   @author Tore Stenbock
-  *   @param _title The title text of the OAD
-  *   @param _description The description text of the OAD
-  *   @param _bundleable Flag whether this OAD can be bundled with other OADs
+  *   @param _oad_type The OAD type
+  *   @param _owner_addr The owner of the OADs
+  *   @param _only_bundle Flag to return only bundles
   */
-  function createOAD1AndRegister(
-    string memory _title,
-    string memory _description,
-    bool _bundleable
+  function query(
+    uint _oad_type,
+    address _owner_addr,
+    bool _only_bundle
   )
   public
+  view
+  returns(address[] memory)
   {
-    // Perform OAD1 value checks
-    utils.validateOADTitle(_title);
-    utils.validateOADDescription(_description);
+    address[] memory _oads_by_type = warehouse.getByType(_oad_type);
+    address[] memory _oads_by_owner = warehouse.getByOwner(_owner_addr);
 
-    // Create the asset itself
-    OAD1 _oad1 = new OAD1(_title, _description, _bundleable);
-    _oad1.transferOwnership(msg.sender);
-    emit Orioneum_CREATE_OAD1(address(_oad1), _oad1.owner());
-
-    // Register the returned address
-    register(address(_oad1));
-  }
-
-
-
-  /****************************************************************************/
-  /****           External helper functions for Orioneum Dapps             ****/
-  /****************************************************************************/
-
-  /**
-  *   Get all the available OAD type codes
-  *
-  *   @author Tore Stenbock
-  *   @return An uint array of all available OAD type codes
-  */
-  function getAvailableOADTypeCodes() external pure returns(uint[] memory) {
-    uint[] memory _available_oad_types = new uint[](total_oad_types);
-    _available_oad_types[0] = oad1_type;
-    _available_oad_types[1] = oad2_type;
-
-    return(_available_oad_types);
+    return(_oads_by_type);
   }
 
   /**
-  *   Get the base title and description of the available assets
+  *   Execute a query into the Registry and Warehouse to get all OADs
+  *   of certain type and all owners. See OPD documentation for more details.
   *
   *   @author Tore Stenbock
-  *   @param _oad_type Which OAD type to get base information of
-  *   @return Two strings containing the base title and base description
+  *   @param _oad_type The OAD type
+  *   @param _only_bundle Flag to return only bundles
   */
-  function getOADTypeBaseInformation(uint _oad_type) external view returns(string memory, string memory) {
-    require(available_oad_types[_oad_type], "Invalid OAD type");
-
-    if (_oad_type == oad1_type) {
-      return(
-        "Item for sale",
-        "A generic item with a non-zero sell value and with basic owner information."
-      );
-    }
-    else if (_oad_type == oad2_type) {
-      return(
-        "Discount code",
-        "A discount code with a zero sell value and with basic owner information."
-      );
-    }
-
-    // This should never happen
-    return("Error", "Something very wrong happened. This should not happen.");
+  function query(
+    uint _oad_type,
+    bool _only_bundle
+  )
+  public
+  view
+  returns(address[] memory)
+  {
+    address[] memory _oads_by_type = warehouse.getByType(_oad_type);
+    
+    return(_oads_by_type);
   }
 }

@@ -4,12 +4,13 @@
 node_modules/
 
 # Smart contracts and Truffle folders
-build/contracts/*
-!build/contracts/Warehouse.json
-!build/contracts/Registry.json
+build/
 contracts/
 migrations/
 truffle-config.js
 
 # Misc
 npm-debug.log
+package-lock.json
+package.json
+webpack.config.js
