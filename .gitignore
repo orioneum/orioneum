@@ -1,5 +1,6 @@
 
 # Basic ignores
+dist/
 build/
 node_modules/
 
