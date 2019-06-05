@@ -4,6 +4,8 @@
 node_modules/
 
 # Smart contracts and Truffle folders
+src/
+test/
 build/
 contracts/
 migrations/
