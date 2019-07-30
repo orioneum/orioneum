@@ -14,7 +14,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 *   @title Registry
 *   @author Tore Stenbock
 */
-contract Registry is Ownable {
+contract Orioneum is Ownable {
 
   // All Registry events
   event Orioneum_REGISTER_NEW       (address indexed oad_addr);
@@ -26,7 +26,7 @@ contract Registry is Ownable {
 
 
   /**
-  *   Registry constructor
+  *   Orioneum constructor
   *
   *   @author Tore Stenbock
   *   @param _warehouse_addr The address of the Warehouse contract
@@ -50,21 +50,17 @@ contract Registry is Ownable {
   *   @author Tore Stenbock
   *   @param _oad_type The OAD type
   *   @param _bundleable Flag whether OAD is bundleable
-  *   @param _digest Bytes32 representation of IPFS hash
-  *   @param _hash_function Hash function for IPFS has
-  *   @param _size Size of the IPFS hash minus header
+  *   @param _ipfs_hash The IPFS hash of the OAD data
   */
   function register(
     uint _oad_type,
     bool _bundleable,
-    bytes32 _digest,
-    uint8 _hash_function,
-    uint8 _size
+    string memory _ipfs_hash
   )
   public returns(bool)
   {
     // Create the asset and enforce proper owner
-    BaseOAD _oad = new BaseOAD(_oad_type, _bundleable, _digest, _hash_function, _size);
+    BaseOAD _oad = new BaseOAD(_oad_type, _bundleable, _ipfs_hash);
     _oad.transferOwnership(msg.sender);
 
     // Add the asset to the warehouse

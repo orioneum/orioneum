@@ -1,5 +1,5 @@
 const Warehouse = artifacts.require("./Warehouse.sol")
-const Registry = artifacts.require("./Registry.sol")
+const Orioneum = artifacts.require("./Orioneum.sol")
 
 
 
@@ -9,10 +9,10 @@ module.exports = function(deployer) {
 
     // Get handle Warehouse contract and deploy the Registry
     const warehouse = await Warehouse.deployed()
-    await deployer.deploy(Registry, warehouse.address)
+    await deployer.deploy(Orioneum, warehouse.address)
 
     // Perform access logic updates
-    const registry = await Registry.deployed()
-    warehouse.addAllowedSender(registry.address)
+    const orioneum = await Orioneum.deployed()
+    warehouse.addAllowedSender(orioneum.address)
   })
 }
