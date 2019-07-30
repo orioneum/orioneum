@@ -60,7 +60,7 @@ contract('Registry', async (accounts) => {
 
   describe("register()", () => {
 
-    before("Deploying Warehouse, Factory, and Registry", async () => {
+    beforeEach("Deploying Warehouse, Factory, and Registry", async () => {
       warehouse = await Warehouse.new()
       factory = await Factory.new()
       registry = await Registry.new(factory.address, warehouse.address)
@@ -68,45 +68,17 @@ contract('Registry', async (accounts) => {
       warehouse.addAllowedSender(registry.address)
     })
 
-    it("Check registering existing.", async () => {
-      const ipfs_hash = 'QmahqCsAUAw7zMv6P6Ae8PjCTck7taQA6FgGQLnWdKG7U8'
-      const { digest, hash_function, size } = getBreakdownFromMultihash(ipfs_hash)
-      const oad = await BaseOAD.new(1, true, digest, hash_function, size, {from: user1})
-
-      const tx1 = await registry.register(oad.address, {from: user1})
-      const tx2 = await registry.register(oad.address, {from: user1})
-
-      await truffleAssert.eventEmitted(tx1, "Orioneum_REGISTER_NEW")
-      await truffleAssert.eventEmitted(tx2, "Orioneum_REGISTER_FAILED")
-    })
-
-  })
-
-  /****************************************************************************/
-  /****                       createAndRegister()                          ****/
-  /****************************************************************************/
-
-  describe("createAndRegister()", () => {
-
-    before("Deploying Warehouse, Factory, and Registry", async () => {
-      warehouse = await Warehouse.new()
-      factory = await Factory.new()
-      registry = await Registry.new(factory.address, warehouse.address)
-
-      warehouse.addAllowedSender(registry.address)
-    })
-
-    it("Check double creating.", async () => {
+    it("Check create ownership.", async () => {
       const ipfs_hash = 'QmahqCsAUAw7zMv6P6Ae8PjCTck7taQA6FgGQLnWdKG7U8'
       const { digest, hash_function, size } = getBreakdownFromMultihash(ipfs_hash)
 
-      const tx1 = await registry.createAndRegister(1, true, digest, hash_function, size, {from: user1})
-      await truffleAssert.eventEmitted(tx1, "Orioneum_REGISTER_NEW")
+      const tx1 = await registry.register(1, true, digest, hash_function, size, {from: user1})
+      await truffleAssert.eventEmitted(tx1, "Orioneum_REGISTER_NEW", async (ev) => {
+        const baseOAD = await BaseOAD.at(ev.oad_addr)
+        const _owner = await baseOAD.owner()
+        return (_owner === user1)
+      }, "Asset was not created with correct owner")
       await truffleAssert.eventNotEmitted(tx1, "Orioneum_REGISTER_FAILED")
-
-      const tx2 = await registry.createAndRegister(1, true, digest, hash_function, size, {from: user1})
-      await truffleAssert.eventEmitted(tx2, "Orioneum_REGISTER_NEW")
-      await truffleAssert.eventNotEmitted(tx2, "Orioneum_REGISTER_FAILED")
     })
 
   })
@@ -117,7 +89,7 @@ contract('Registry', async (accounts) => {
 
   describe("query()", () => {
 
-    before("Deploying Warehouse, Factory, and Registry", async () => {
+    beforeEach("Deploying Warehouse, Factory, and Registry", async () => {
       warehouse = await Warehouse.new()
       factory = await Factory.new()
       registry = await Registry.new(factory.address, warehouse.address)
@@ -126,14 +98,37 @@ contract('Registry', async (accounts) => {
     })
 
     it("Check query on type.", async () => {
-      const ipfs_hash = 'QmahqCsAUAw7zMv6P6Ae8PjCTck7taQA6FgGQLnWdKG7U8'
+      const ipfs_hash = 'QmahqCsAUAw7zMv6P6Ae8PjCTck7taQA6FgGQLnWdKG7U1'
       const { digest, hash_function, size } = getBreakdownFromMultihash(ipfs_hash)
-      const oad = await BaseOAD.new(1, true, digest, hash_function, size, {from: user1})
 
-      const tx1 = await registry.register(oad.address, {from: user1})
+      // Insert an asset
+      const tx1 = await registry.register(1, true, digest, hash_function, size, {from: user1})
       await truffleAssert.eventEmitted(tx1, "Orioneum_REGISTER_NEW")
 
-      const oads = await registry.query(1, false)
+      // Insert another
+      const tx2 = await registry.register(2, true, digest, hash_function, size, {from: user2})
+      await truffleAssert.eventEmitted(tx2, "Orioneum_REGISTER_NEW")
+
+      // Check query on type
+      const oads = await registry.queryByType(2, false, {from: user1})
+      assert.equal(oads.length, 1, "Query on type returns invalid entries.")
+    })
+
+    it("Check query on owner.", async () => {
+      const ipfs_hash = 'QmahqCsAUAw7zMv6P6Ae8PjCTck7taQA6FgGQLnWdKG7U1'
+      const { digest, hash_function, size } = getBreakdownFromMultihash(ipfs_hash)
+
+      // Insert an asset
+      const tx1 = await registry.register(1, true, digest, hash_function, size, {from: user1})
+      await truffleAssert.eventEmitted(tx1, "Orioneum_REGISTER_NEW")
+
+      // Insert another
+      const tx2 = await registry.register(2, true, digest, hash_function, size, {from: user2})
+      await truffleAssert.eventEmitted(tx2, "Orioneum_REGISTER_NEW")
+
+      // Check query on owner
+      const oads = await registry.queryByOwner(user1, true, {from: user1})
+      assert.equal(oads.length, 1, "Query on owner returns invalid entries.")
     })
 
   })

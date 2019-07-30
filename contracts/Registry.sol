@@ -1,5 +1,6 @@
 pragma solidity 0.5.8;
 
+import "./BaseOAD.sol";
 import "./Factory.sol";
 import "./Warehouse.sol";
 
@@ -48,24 +49,8 @@ contract Registry is Ownable {
   /****************************************************************************/
 
   /**
-  *   Register a previously created OAD
-  *
-  *   @author Tore Stenbock
-  *   @param _oad_addr The address of the OAD
-  */
-  function register(address _oad_addr) public returns(bool) {
-    if(!warehouse.add(_oad_addr)) {
-      emit Orioneum_REGISTER_FAILED(_oad_addr);
-      return(false);
-    }
-
-    emit Orioneum_REGISTER_NEW(_oad_addr);
-    return(true);
-  }
-
-  /**
-  *  Create and Register an OAD
-  *   Useful function to bundle all transactions into one
+  *   Create and Register an OAD
+  *   The owner of the asset will be the sender of transaction
   *
   *   @author Tore Stenbock
   *   @param _oad_type The OAD type
@@ -74,18 +59,27 @@ contract Registry is Ownable {
   *   @param _hash_function Hash function for IPFS has
   *   @param _size Size of the IPFS hash minus header
   */
-  function createAndRegister(
+  function register(
     uint _oad_type,
     bool _bundleable,
-    // Following is IPFS Multihash values
     bytes32 _digest,
     uint8 _hash_function,
     uint8 _size
   )
   public returns(bool)
   {
-    address _oad_addr = factory.create(_oad_type, _bundleable, _digest, _hash_function, _size);
-    return(register(_oad_addr));
+    // Create the asset and enforce proper owner
+    BaseOAD _oad = new BaseOAD(_oad_type, _bundleable, _digest, _hash_function, _size);
+    _oad.transferOwnership(msg.sender);
+
+    // Add the asset to the warehouse
+    if(!warehouse.add(_oad)) {
+      emit Orioneum_REGISTER_FAILED(address(_oad));
+      return(false);
+    }
+
+    emit Orioneum_REGISTER_NEW(address(_oad));
+    return(true);
   }
 
 
@@ -99,12 +93,10 @@ contract Registry is Ownable {
   *   of certain type and owner. See OPD documentation for more details.
   *
   *   @author Tore Stenbock
-  *   @param _oad_type The OAD type
   *   @param _owner_addr The owner of the OADs
   *   @param _only_bundle Flag to return only bundles
   */
-  function query(
-    uint _oad_type,
+  function queryByOwner(
     address _owner_addr,
     bool _only_bundle
   )
@@ -112,10 +104,8 @@ contract Registry is Ownable {
   view
   returns(address[] memory)
   {
-    address[] memory _oads_by_type = warehouse.getByType(_oad_type);
     address[] memory _oads_by_owner = warehouse.getByOwner(_owner_addr);
-
-    return(_oads_by_type);
+    return(_oads_by_owner);
   }
 
   /**
@@ -126,7 +116,7 @@ contract Registry is Ownable {
   *   @param _oad_type The OAD type
   *   @param _only_bundle Flag to return only bundles
   */
-  function query(
+  function queryByType(
     uint _oad_type,
     bool _only_bundle
   )
@@ -135,7 +125,6 @@ contract Registry is Ownable {
   returns(address[] memory)
   {
     address[] memory _oads_by_type = warehouse.getByType(_oad_type);
-    
     return(_oads_by_type);
   }
 }

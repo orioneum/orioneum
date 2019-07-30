@@ -12,20 +12,25 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 *   @author Tore Stenbock
 */
 contract BaseOAD is Ownable {
-  uint public oad_type = 0;
-  uint public creation_time = now;
-  bool public bundleable = false;
+
+  // Following is IPFS Multihash values
   struct IPFSMultiHash {
     bytes32 digest;
     uint8 hash_function;
     uint8 size;
   }
+
+  // Mandatory values for all BaseOADs
+  uint public oad_type = 0;
+  uint public creation_time = now;
+  bool public bundleable = false;
   IPFSMultiHash private ipfs;
+
+
 
   constructor(
     uint _oad_type,
     bool _bundleable,
-    // Following is IPFS Multihash values
     bytes32 _digest,
     uint8 _hash_function,
     uint8 _size
@@ -38,13 +43,8 @@ contract BaseOAD is Ownable {
     ipfs = IPFSMultiHash(_digest, _hash_function, _size);
   }
 
-  function updateBundleable(bool _bundleable) public onlyOwner {
-    bundleable = _bundleable;
-  }
 
-  function updateIPFSMultihash(bytes32 _digest, uint8 _hash_function, uint8 _size) public onlyOwner {
-    ipfs = IPFSMultiHash(_digest, _hash_function, _size);
-  }
+
   function getIPFSMultihash() public view returns(bytes32, uint8, uint8) {
     return(ipfs.digest, ipfs.hash_function, ipfs.size);
   }

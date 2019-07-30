@@ -62,12 +62,10 @@ contract Warehouse is Ownable {
   *   The warehouse will assume the OAD smart contract owner is the main owner
   *
   *   @author Tore Stenbock
-  *   @param _oad_addr The smart contract address of the OAD to be added
+  *   @param _base_oad The BaseOAD structure to be inputted to storage
   */
-  function add(address _oad_addr) external onlyOrioneum returns(bool) {
-
-    // Do checks that will trigger reverts if happen
-    BaseOAD _base_oad = BaseOAD(_oad_addr);
+  function add(BaseOAD _base_oad) external onlyOrioneum returns(bool) {
+    address _oad_addr = address(_base_oad);
 
     // Check that the asset has not been added previously
     if(exists(_oad_addr)) {
