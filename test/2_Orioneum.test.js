@@ -1,6 +1,5 @@
 const truffleAssert = require('truffle-assertions')
 
-const Factory = artifacts.require("../contracts/Factory")
 const Warehouse = artifacts.require("../contracts/Warehouse")
 const Registry = artifacts.require("../contracts/Registry")
 const BaseOAD = artifacts.require("../contracts/BaseOAD")
@@ -33,23 +32,18 @@ contract('Registry', async (accounts) => {
 
     before("Deploying Warehouse, Factory, and Registry", async () => {
       warehouse = await Warehouse.new()
-      factory = await Factory.new()
-      registry = await Registry.new(factory.address, warehouse.address)
+      registry = await Registry.new(warehouse.address)
 
       warehouse.addAllowedSender(registry.address)
     })
 
     it("Check invalid caller.", async () => {
-      await truffleAssert.reverts(Registry.new(factory.address, warehouse.address, {from: rand_addr1}),
+      await truffleAssert.reverts(Registry.new(warehouse.address, {from: rand_addr1}),
         "Registry owner must be same as Factory and Warehouse owner.")
     })
 
-    it("Check invalid Factory address.", async () => {
-      await truffleAssert.reverts(Registry.new(rand_addr1, warehouse.address))
-    })
-
     it("Check invalid Warehouse address.", async () => {
-      await truffleAssert.reverts(Registry.new(factory.address, rand_addr1))
+      await truffleAssert.reverts(Registry.new(rand_addr1))
     })
 
   })
@@ -62,8 +56,7 @@ contract('Registry', async (accounts) => {
 
     beforeEach("Deploying Warehouse, Factory, and Registry", async () => {
       warehouse = await Warehouse.new()
-      factory = await Factory.new()
-      registry = await Registry.new(factory.address, warehouse.address)
+      registry = await Registry.new(warehouse.address)
 
       warehouse.addAllowedSender(registry.address)
     })
@@ -91,8 +84,7 @@ contract('Registry', async (accounts) => {
 
     beforeEach("Deploying Warehouse, Factory, and Registry", async () => {
       warehouse = await Warehouse.new()
-      factory = await Factory.new()
-      registry = await Registry.new(factory.address, warehouse.address)
+      registry = await Registry.new(warehouse.address)
 
       warehouse.addAllowedSender(registry.address)
     })

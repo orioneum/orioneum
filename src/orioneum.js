@@ -1,6 +1,5 @@
 import Package from '../package.json'
 import Warehouse from '../build/contracts/Warehouse.json'
-import Factory from '../build/contracts/Factory.json'
 import Registry from '../build/contracts/Registry.json'
 
 import { getBreakdownFromMultihash, getMultihashFromBreakdown } from './multihash.js'
@@ -14,7 +13,6 @@ exports.Orioneum = {
   // Truffle compiled Smart Contracts
   "contracts": {
     Warehouse,
-    Factory,
     Registry
   },
   // Helper functions

@@ -1,7 +1,6 @@
 pragma solidity 0.5.8;
 
 import "./BaseOAD.sol";
-import "./Factory.sol";
 import "./Warehouse.sol";
 
 
@@ -22,7 +21,6 @@ contract Registry is Ownable {
   event Orioneum_REGISTER_FAILED    (address indexed oad_addr);
 
   // Orioneum Contracts
-  Factory private factory;
   Warehouse private warehouse;
 
 
@@ -31,15 +29,12 @@ contract Registry is Ownable {
   *   Registry constructor
   *
   *   @author Tore Stenbock
-  *   @param _factory_addr The address of the Factory contract
   *   @param _warehouse_addr The address of the Warehouse contract
   */
-  constructor(address _factory_addr, address _warehouse_addr) Ownable() public {
-    // Get a handle on the deployed Factory and Warehouse contracts
-    factory = Factory(_factory_addr);
+  constructor(address _warehouse_addr) Ownable() public {
+    // Get a handle on the Orioneum contracts and validate ownerships
     warehouse = Warehouse(_warehouse_addr);
-    require(owner() == factory.owner() && owner() == warehouse.owner(),
-      "Registry owner must be same as Factory and Warehouse owner.");
+    require(owner() == warehouse.owner(), "Registry owner must be same as Factory and Warehouse owner.");
   }
 
 
