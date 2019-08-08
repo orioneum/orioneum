@@ -2,8 +2,6 @@ const truffleAssert = require('truffle-assertions')
 
 const BaseOAD = artifacts.require("../contracts/BaseOAD")
 
-import { getBreakdownFromMultihash, getMultihashFromBreakdown } from '../src/multihash.js'
-
 
 
 contract('BaseOAD', async (accounts) => {

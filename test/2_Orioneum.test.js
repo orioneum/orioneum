@@ -4,8 +4,6 @@ const Warehouse = artifacts.require("../contracts/Warehouse")
 const Orioneum = artifacts.require("../contracts/Orioneum")
 const BaseOAD = artifacts.require("../contracts/BaseOAD")
 
-import { getBreakdownFromMultihash, getMultihashFromBreakdown } from '../src/multihash.js'
-
 
 
 contract('Orioneum', async (accounts) => {
