@@ -118,4 +118,21 @@ contract Orioneum is Ownable {
     address[] memory _oads_by_type = warehouse.getByType(_oad_type);
     return(_oads_by_type);
   }
+
+  /**
+  *   Query the BaseOAD information of an OAD address from the Warehouse
+  *
+  *   @author Tore Stenbock
+  *   @param _oad_addr The OAD address
+  *   @return The BaseOAD information [uint type, address owner, bool bundleable, string ipfs_hash]
+  */
+  function queryBaseOAD(
+    address _oad_addr
+  )
+  public
+  view
+  returns(uint, address, bool, string memory)
+  {
+    return(warehouse.getBaseOAD(_oad_addr));
+  }
 }

@@ -91,6 +91,8 @@ contract Warehouse is Ownable {
   *   @return An array of addresses with all OAD addresses owned by _owner_addr
   */
   function getByOwner(address _owner_addr) external view onlyOrioneum returns(address[] memory) {
+    require(_owner_addr != address(0), "Owner address can not be 0x0");
+
     return(oads_addr_by_owner[_owner_addr]);
   }
 
@@ -98,11 +100,28 @@ contract Warehouse is Ownable {
   *   Gets all OADs in the Warehouse matching _oad_type
   *
   *   @author Tore Stenbock
-  *   @param _oad_type The oad tpye
+  *   @param _oad_type The oad type
   *   @return An array of addresses with all OAD addresses of type
   */
   function getByType(uint _oad_type) external view onlyOrioneum returns(address[] memory) {
+    require(_oad_type > 0, "OAD type must be greater than 0");
+
     return(oads_addr_by_type[_oad_type]);
+  }
+
+  /**
+  *   Get BaseOAD information from _oad_addr
+  *
+  *   @author Tore Stenbock
+  *   @param _oad_addr The oad address
+  *   @return The BaseOAD information [uint type, address owner, bool bundleable, string ipfs_hash]
+  */
+  function getBaseOAD(address _oad_addr) external view onlyOrioneum returns(uint, address, bool, string memory) {
+    require(_oad_addr != address(0), "OAD address can not be 0x0");
+    require(exists(_oad_addr), "OAD address must exist in the Warehouse");
+
+    BaseOAD _base_oad = BaseOAD(_oad_addr);
+    return(_base_oad.oad_type(), _base_oad.owner(), _base_oad.bundleable(), _base_oad.ipfs_hash());
   }
 
 

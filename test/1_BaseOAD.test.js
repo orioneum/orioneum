@@ -9,12 +9,13 @@ import { getBreakdownFromMultihash, getMultihashFromBreakdown } from '../src/mul
 contract('BaseOAD', async (accounts) => {
 
   // Define some users
-  const originator = accounts[0] // This is the base Orioneum address
-  const rand_addr1 = accounts[1]
-  const rand_addr2 = accounts[2]
-  const user1 = accounts[3]
-  const user2 = accounts[4]
-  const user3 = accounts[5]
+  const zero_addr = '0x0000000000000000000000000000000000000000'
+  const originator_addr = accounts[0] // This is the base Registry address
+  const rand1_addr = accounts[1]
+  const rand2_addr = accounts[2]
+  const user1_addr = accounts[3]
+  const user2_addr = accounts[4]
+  const user3_addr = accounts[5]
 
 
 
