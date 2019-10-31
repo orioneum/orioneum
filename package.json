@@ -10,9 +10,6 @@
     "orioneum",
     "web3"
   ],
-  "dependencies": {
-    "bs58": "^4.0.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
