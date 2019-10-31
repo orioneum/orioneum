@@ -7,7 +7,7 @@ import Orioneum from '../build/contracts/Orioneum.json'
 exports.Orioneum = {
   // Package information
   "version": version,
-  "availableOADs": [1]
+  "availableOADs": [1],
   // Truffle compiled Smart Contracts
   "contracts": {
     Orioneum
