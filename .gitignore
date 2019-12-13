@@ -1,7 +1,10 @@
 
 # Basic ignores
 dist/
-build/
+build/*
+!build/contracts/
+build/contracts/*
+!build/contracts/Orioneum.json
 node_modules/
 
 # Misc
